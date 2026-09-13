@@ -1,17 +1,69 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Афіша подій міста</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Афіша подій міста</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
-<!-- шапка з назвою і навігацією -->
-<!-- блок фільтра за датою/категорією -->
-<!-- список подій (картки) -->
-<!-- блок деталей обраної події-->
-<!-- підвал -->
+    <header>
+        <h1>Афіша подій міста</h1>
+            <nav>
+                <a href="#events">Події</a>
+                <a href="#selected-event">Обрана подія</a>
+            </nav>
+    </header>
+
+    <main> 
+        <section>
+            <h2>Фільтр за датою/категорією</h2>
+        </section>
+
+        <section id="events">
+            <h2>Події</h2>
+
+            <article class="card concert">
+                <h3>Концерт «EXPERIENCE. Ludovico Einaudi та Max Richter»</h3>
+                <img src="assets/img/placeholder.jpg" alt="Афіша Концерту EXPERIENCE">
+            </article>
+
+            <article class="card concert">
+                <h3>Виступ Романа Скорпіона</h3>
+                <img src="assets/img/placeholder.jpg" alt="Афіша Романа Скорпіона">
+            </article>
+
+            <article class="card concert">
+                <h3>Концерт гурту OKS</h3>
+                <img src="assets/img/placeholder.jpg" alt="Афіша Гурту OKS">
+            </article>
+
+            <article class="card cinema">
+                <h3>Кіносеанс «Film»</h3>
+                <img src="assets/img/placeholder.jpg" alt="Афіша Кіносеансу Film">
+            </article>
+
+        </section>
+    </main>
+
+    <aside id="selected-event">
+        <h2>Деталі обраної події</h2>
+        <p>текст-заглушка</p>
+    </aside>
+
+    <footer>
+        <section>
+            <h2>Контакти організаторів</h2>
+
+            <address>
+                <p>Email: info@cityevents.ua</p>
+                <p>Телефон: +38(067) 676-67-67</p>
+            </address>
+
+        </section>
+    </footer>
 <script src="js/app.js"></script>
 </body>
 </html>
