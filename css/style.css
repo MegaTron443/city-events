@@ -1,15 +1,30 @@
-
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
+:root {
+  --font-main: 'Inter', system-ui, sans-serif; /*- "строгий", легкий для читання шрифт для основного тексту */
+  --font-heading: 'Montserrat', system-ui, sans-serif; /*- "динамічний" шрифт, нагадує про святкову енергію */
+
+  --color-primary: #4f46e5; /*- фіолетовий колір для акцентування важливих елементів, дат */
+  --color-header: #fbbf24; /*- теплий жовий колір передає теплу атмосферу свята*/
+  --color-bg: #f9fafb; 
+  --color-card-bg: #ffffff; /* - світлий фон для карток, забезпечує контраст із темним текстом та неперевантажує з заднім фоном */
+  --color-text-main: #1f2937; /* - темний сірий колір для основного тексту, забезпечує гарну читабельність */
+  --color-dark: #111827; /* - темний колір для контрасту та виділення важливих елементів */
+/* - яскраві кольори для бейджів, що відображають різні категорії подій */
+  --badge-concert: #dc2626; /* - яскравий червоний колір для бейджів концертів, що привертає увагу та передає енергію музики */
+  --badge-cinema: #d97706; /* - насичений помаранчевий колір для бейджів кіно, що створює відчуття тепла та захоплення */
+  --badge-theatre: #7c3aed; /* - глибокий фіолетовий колір для бейджів театру, що передає елегантність */
+}
+
 body {
   margin: 0;
-  font-family: system-ui, sans-serif;
+  font-family: var(--font-main);
   font-size: 1rem;
-  line-height: 1.5;
-  color: #1a1a1a;
-  background-color: #f4f6f8;
+  line-height: 1.6;
+  color: var(--color-text-main);
+  background-color: var(--color-bg);
 }
 
 img {
@@ -18,31 +33,35 @@ img {
   display: block;
 }
 
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  color: var(--color-dark);
+  margin-top: 0;
+}
+
 header {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
   gap: 16px;
-  background-color: #121417;
-  color: #ffffff;
-  padding: 32px 24px;
+  background-color: var(--color-dark);
+  padding: 24px 16px;
 }
 
 header h1 {
-  color: #ffffff;
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.2;
+  margin: 0;
+  color: var(--color-header);
+  letter-spacing: -0.02em;
 }
 
 header nav {
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 24px;
+  gap: 12px;
+  width: 100%;
 }
 
 header nav a {
@@ -56,11 +75,13 @@ header nav a:hover {
   color: #ffffff;
 }
 
-main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 24px;
+.layout-container {
   width: 100%;
+}
+
+main {
+  width: 100%;
+  padding: 24px 16px;
 }
 
 section {
@@ -71,6 +92,11 @@ section:last-of-type {
   margin-bottom: 0;
 }
 
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
 .cards {
   display: grid;
   grid-template-columns: 1fr;
@@ -78,39 +104,120 @@ section:last-of-type {
 }
 
 .card {
-  background-color: #ffffff;
-  border-left: 4px solid #4f46e5;
+  background-color: var(--color-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+.card-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 160px;
+  background-color: #e5e7eb; /* світло-сіра плашка, якщо фото не знайдено */
+}
+
+.card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.badge.concert { background-color: var(--badge-concert); }
+.badge.cinema { background-color: var(--badge-cinema); }
+.badge.theatre { background-color: var(--badge-theatre); }
+
+.card-body {
   padding: 16px;
-  border-radius: 0 12px 12px 0;
-  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
 }
 
-.card.theatre {
-  border-left-color: #7c3aed;
+.event-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #eef2ff;
+  color: var(--color-primary);
+  padding: 6px 10px;
+  border-radius: 8px;
+  min-width: 50px;
+  flex-shrink: 0;
 }
 
-.card.concert {
-  border-left-color: #ef4444;
+.event-date .day {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
-.card.cinema {
-  border-left-color: #d97706;
+.event-date .month {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.event-title {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  margin: 0;
 }
 
 aside {
-  max-width: 1200px;
-  margin: 0 auto 36px auto;
-  background-color: #e9ecef;
-  border: 1px solid #ced4da;
-  border-radius: 6px;
-  padding: 28px 16px;
+  margin: 0 16px 36px 16px;
+  background-color: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 24px 16px;
+}
+
+aside h2 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+}
+
+aside p {
+  margin: 0;
+  color: #4b5563;
 }
 
 footer {
   font-size: 0.85rem;
-  background-color: #121417;
+  background-color: var(--color-dark);
   color: #9ca3af;
-  padding: 28px 24px;
+  padding: 28px 16px;
+}
+
+footer h2 {
+  color: #ffffff;
+  font-size: 1.15rem;
+}
+
+footer address {
+  font-style: normal;
+}
+
+footer p {
+  margin: 6px 0;
 }
 
 footer a {
@@ -122,45 +229,60 @@ footer a {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    padding: 24px 24px;
   }
 
   header nav {
     flex-direction: row;
     width: auto;
     gap: 20px;
+  }
+
+  main {
+    padding: 32px 24px;
+  }
+
+  aside {
+    margin: 0 24px 36px 24px;
+    padding: 24px;
+  }
+
+  footer {
+    padding: 28px 24px;
   }
 
   .cards {
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
   }
 }
 
 @media (min-width: 1024px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
   .layout-container {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 32px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
+    gap: 24px;
+    max-width: 1440px;
+    margin: 40px auto;
+    padding: 0 32px;
     align-items: start;
   }
 
-  header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
+  main {
+    padding: 0;
   }
 
-  header nav {
-    flex-direction: row;
-    width: auto;
-    gap: 20px;
+  aside {
+    margin: 0;
+    padding: 24px;
+    position: sticky;
+    top: 24px;
   }
 
   .cards {
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
   }
 }

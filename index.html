@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Афіша подій міста</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -26,25 +29,63 @@
             <section id="events">
                 <h2>Події</h2>
                 <div class="cards"> 
-                    <article class="card concert">
-                        <h3>Концерт «EXPERIENCE. Ludovico Einaudi та Max Richter»</h3>
-                        <img src="assets/img/placeholder.jpg" alt="Афіша Концерту EXPERIENCE">
+                    
+                    <article class="card">
+                        <div class="card-image-wrap">
+                            <img src="assets/img/placeholder.jpg" alt="Афіша Концерту EXPERIENCE">
+                            <span class="badge concert">Концерт</span>
+                        </div>
+                        <div class="card-body">
+                            <time class="event-date" datetime="2026-10-15">
+                                <span class="day">15</span>
+                                <span class="month">жовтня</span>
+                            </time>
+                            <h3 class="event-title">EXPERIENCE. Ludovico Einaudi та Max Richter</h3>
+                        </div>
                     </article>
 
                     <article class="card concert">
-                        <h3>Виступ Романа Скорпіона</h3>
-                        <img src="assets/img/placeholder.jpg" alt="Афіша Романа Скорпіона">
+                        <div class="card-image-wrap">
+                            <img src="assets/img/placeholder.jpg" alt="Афіша Романа Скорпіона">
+                            <span class="badge concert">Концерт</span>
+                        </div>
+                        <div class="card-body">
+                            <time class="event-date" datetime="2026-10-16">
+                                <span class="day">16</span>
+                                <span class="month">жовтня</span>
+                            </time>
+                            <h3 class="event-title">Виступ Романа Скорпіона</h3>
+                        </div>
                     </article>
 
                     <article class="card concert">
-                        <h3>Концерт гурту OKS</h3>
-                        <img src="assets/img/placeholder.jpg" alt="Афіша Гурту OKS">
+                        <div class="card-image-wrap">
+                            <img src="assets/img/placeholder.jpg" alt="Афіша Гурту OKS">
+                            <span class="badge concert">Концерт</span>
+                        </div>
+                        <div class="card-body">
+                            <time class="event-date" datetime="2026-10-17">
+                                <span class="day">17</span>
+                                <span class="month">жовтня</span>
+                            </time>
+                            <h3 class="event-title">Концерт гурту OKS</h3>
+                        </div>
                     </article>
 
                     <article class="card cinema">
-                        <h3>Кіносеанс «Film»</h3>
-                        <img src="assets/img/placeholder.jpg" alt="Афіша Кіносеансу Film">
+                        <div class="card-image-wrap">
+                            <img src="assets/img/placeholder.jpg" alt="Афіша Кіносеансу Film">
+                            <span class="badge cinema">Кіно</span>
+                        </div>
+                        <div class="card-body">
+                            <time class="event-date" datetime="2026-10-18">
+                                <span class="day">18</span>
+                                <span class="month">жовтня</span>
+                            </time>
+                            <h3 class="event-title">Кіносеанс «Film»</h3>
+                        </div>
                     </article>
+
                 </div>
             </section>
         </main>
