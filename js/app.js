@@ -1,4 +1,6 @@
 const staticCard = document.querySelectorAll('.card');
+const form = document.querySelector('#event-form');
+
 if (staticCard) {
     staticCard.forEach(card => card.remove());
 }
@@ -36,6 +38,67 @@ const events = [
         date: '2026-10-17' 
     },
 ];
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  if (!form.checkValidity()) {
+    form.reportValidity();
+    return;
+  }
+
+  const title = event.target.elements.title.value.trim();
+  const category = event.target.elements.category.value;
+  const date = event.target.elements.date.value;
+
+  const newEvent = {
+    id: Date.now(),
+    title: title,
+    category: category,
+    img: 'placeholder.jpg', // Додаємо заглушку для фото, щоб нова картка не ламалася
+    date: date
+  };
+
+  events.push(newEvent);
+  renderEvents(events);
+  form.reset();
+});
+
+const titleInput = document.querySelector('#event-title');
+
+titleInput.addEventListener('input', () => {
+  titleInput.setCustomValidity('');
+
+  const value = titleInput.value.trim();
+
+  if (value.length > 0 && value.length < 3) {
+    titleInput.setCustomValidity('Назва події повинна містити щонайменше 3 символи!');
+  }
+});
+
+titleInput.addEventListener('invalid', () => {
+  if (titleInput.validity.valueMissing) {
+    titleInput.setCustomValidity('Будь ласка, заповніть це поле!');
+  } else if (titleInput.validity.patternMismatch || titleInput.value.trim().length < 3) {
+    titleInput.setCustomValidity('Назва події повинна містити щонайменше 3 символи!');
+  }
+});
+
+const filterContainer = document.querySelector('#category-filter');
+
+filterContainer.addEventListener('click', (event) => {
+  const button = event.target.closest('button');
+  if (!button) return;
+
+  const selectedCategory = button.dataset.category;
+
+  if (selectedCategory === 'all') {
+    renderEvents(events);
+  } else {
+    const filteredEvents = events.filter((item) => item.category === selectedCategory);
+    renderEvents(filteredEvents);
+  }
+});
 
 const listContainer = document.querySelector('#events-list');
 const eventsCount = document.querySelector('#events-count');
