@@ -23,8 +23,54 @@
 
     <div class="layout-container">
         <main> 
-            <section>
-                <h2>Фільтр за датою/категорією</h2>
+            <section id="events-section">
+
+                <div id="category-filter" class="filter-buttons">
+                    <button type="button" data-category="all">Усі</button>
+                    <button type="button" data-category="concert">Концерт</button>
+                    <button type="button" data-category="cinema">Кіно</button>
+                    <button type="button" data-category="theatre">Театр</button>
+                    <button type="button" data-category="exhibition">Виставка</button>
+                </div>
+
+                <h2>Додати подію</h2>
+
+                <form id="event-form">
+                    <div class="form-group">
+                    <label for="event-title">Назва події:</label>
+                    <input 
+                        type="text" 
+                        id="event-title" 
+                        name="title" 
+                        required 
+                        pattern=".{3,}" 
+                        placeholder="Введіть щонайменше 3 символи"
+                    >
+                    </div>
+
+                    <div class="form-group">
+                    <label for="event-category">Категорія:</label>
+                    <select id="event-category" name="category" required>
+                        <option value="" disabled selected>Оберіть категорію</option>
+                        <option value="concert">Концерт</option>
+                        <option value="cinema">Кіно</option>
+                        <option value="theatre">Театр</option>
+                        <option value="exhibition">Виставка</option>
+                    </select>
+                    </div>
+
+                    <div class="form-group">
+                    <label for="event-date">Дата події:</label>
+                    <input 
+                        type="date" 
+                        id="event-date" 
+                        name="date" 
+                        required
+                    >
+                    </div>
+
+                    <button type="submit" id="submit-btn">Додати подію</button>
+                </form>
             </section>
 
             <section id="events">
