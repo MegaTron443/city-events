@@ -75,9 +75,19 @@
 
             <section id="events">
                 <h2>Події</h2>
-                <p id="events-count">Кількість подій: 0</p>
+
+                <div class="events-header-actions">
+                    <p id="events-count">Кількість подій: 0</p>
+                    <button type="button" id="reload-btn" class="btn-refresh">Оновити</button>
+                </div>
+
+                <p id="loading-indicator" class="loading-state" hidden>
+                    Завантаження подій...
+                </p>
+
+                <p id="error-message" class="error-banner" hidden></p>
+
                 <div id="events-list" class="cards"> 
-                    
                     <article class="card">
                         <div class="card-image-wrap">
                             <img src="assets/img/placeholder.jpg" alt="Афіша Концерту EXPERIENCE">
