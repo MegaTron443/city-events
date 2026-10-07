@@ -27,11 +27,55 @@
             <section id="events-section">
 
                 <div id="category-filter" class="filter-buttons">
-                    <button type="button" @click="setCategory('all')">Усі</button>
-                    <button type="button" @click="setCategory('concert')">Концерт</button>
-                    <button type="button" @click="setCategory('cinema')">Кіно</button>
-                    <button type="button" @click="setCategory('theatre')">Театр</button>
-                    <button type="button" @click="setCategory('exhibition')">Виставка</button>
+                    <button 
+                        type="button" 
+                        class="filter-btn" 
+                        :class="{ active: selectedCategory === 'all' }" 
+                        @click="setCategory('all')">
+                        Усі
+                    </button>
+                    <button 
+                        type="button" 
+                        class="filter-btn" 
+                        :class="{ active: selectedCategory === 'concert' }" 
+                        @click="setCategory('concert')">
+                        Концерт
+                    </button>
+                    <button 
+                        type="button" 
+                        class="filter-btn" 
+                        :class="{ active: selectedCategory === 'cinema' }" 
+                        @click="setCategory('cinema')">
+                        Кіно
+                    </button>
+                    <button 
+                        type="button" 
+                        class="filter-btn" 
+                        :class="{ active: selectedCategory === 'theatre' }" 
+                        @click="setCategory('theatre')">
+                        Театр
+                    </button>
+                    <button 
+                        type="button" 
+                        class="filter-btn" 
+                        :class="{ active: selectedCategory === 'exhibition' }" 
+                        @click="setCategory('exhibition')">
+                        Виставка
+                    </button>
+                    <button 
+                        type="button" 
+                        class="filter-btn" 
+                        :class="{ active: selectedCategory === 'holliday' }" 
+                        @click="setCategory('holliday')">
+                        Свято
+                    </button>
+                    <button 
+                        type="button" 
+                        class="filter-btn filter-btn-fav" 
+                        :class="{ active: selectedCategory === 'favorites' }" 
+                        @click="setCategory('favorites')">
+                        ⭐ Обрані ({{ favorites.length }})
+                    </button>
                 </div>
 
                 <h2>Додати подію</h2>
@@ -57,6 +101,7 @@
                         <option value="cinema">Кіно</option>
                         <option value="theatre">Театр</option>
                         <option value="exhibition">Виставка</option>
+                        <option value="holliday">Свято</option>
                     </select>
                     </div>
 
@@ -90,13 +135,20 @@
                     <event-card
                         v-for="event in filteredEvents"
                         :key="event.id"
+                        :id="event.id"
                         :title="event.title"
                         :category="event.category"
                         :date="event.date"
                         :img="event.img"
+                        :is-favorite="isFavorite(event.id)"
+                        @toggle-favorite="toggleFavorite(event)"
                         @select="handleSelectEvent(event)"
                     ></event-card>
                 </div>
+                <p v-if="errorMessage" class="error-banner">⚠️ {{ errorMessage }}</p>
+                <p v-if="filteredEvents.length === 0" class="empty-state">
+                    Подій у цій категорії не знайдено.
+                </p>
             </section>
         </main>
 
