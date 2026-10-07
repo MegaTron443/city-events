@@ -325,6 +325,26 @@ async function renderHomeView(params, container) {
 
 async function renderEventDetailsView(params, container) {
   const eventId = params.id;
+
+  if (cachedEvents.length === 0) {
+    try {
+      const response = await fetch(API_URL);
+      if (response.ok) {
+        const data = await response.json();
+        cachedEvents = data.map(item => ({
+          id: `holiday-${item.date}-${(item.localName || item.name).toLowerCase().replace(/[\s\W]+/g, '-')}`,
+          title: item.localName || item.name,
+          category: 'holliday',
+          img: 'placeholder.jpg',
+          date: item.date,
+          location: 'Головна площа міста'
+        }));
+      }
+    } catch (err) {
+      console.error('Не вдалося завантажити дані для сторінки деталей:', err);
+    }
+  }
+  
   let event = cachedEvents.find(e => String(e.id) === String(eventId));
 
   if (!event) {
