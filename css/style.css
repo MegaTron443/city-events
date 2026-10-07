@@ -27,6 +27,9 @@ body {
   line-height: 1.6;
   color: var(--color-text-main);
   background-color: var(--color-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 img {
@@ -39,6 +42,11 @@ h1, h2, h3 {
   font-family: var(--font-heading);
   color: var(--color-dark);
   margin-top: 0;
+}
+
+h2 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
 }
 
 header {
@@ -79,6 +87,7 @@ header nav a:hover {
 
 .layout-container {
   width: 100%;
+  flex: 1;
 }
 
 main {
@@ -92,98 +101,6 @@ section {
 
 section:last-of-type {
   margin-bottom: 0;
-}
-
-h2 {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-.cards {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 20px;
-}
-
-.card {
-  background-color: var(--color-card-bg);
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
-  display: flex;
-  flex-direction: column;
-}
-
-.card-image-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  min-height: 160px;
-  background-color: #e5e7eb; /* світло-сіра плашка, якщо фото не знайдено */
-}
-
-.card-image-wrap img {
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  color: #ffffff;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 4px 10px;
-  border-radius: 9999px;
-}
-
-.badge.concert { background-color: var(--badge-concert); }
-.badge.cinema { background-color: var(--badge-cinema); }
-.badge.theatre { background-color: var(--badge-theatre); }
-.badge.exhibition { background-color: var(--badge-exhibition); }
-.badge.holliday { background-color: var(--badge-holliday); }
-
-.card-body {
-  padding: 16px;
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.event-date {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #eef2ff;
-  color: var(--color-primary);
-  padding: 6px 10px;
-  border-radius: 8px;
-  min-width: 50px;
-  flex-shrink: 0;
-}
-
-.event-date .day {
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.event-date .month {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.event-title {
-  font-size: 1.125rem;
-  line-height: 1.4;
-  margin: 0;
 }
 
 aside {
@@ -228,83 +145,115 @@ footer a {
   color: #d1d5db;
 }
 
-@media (min-width: 600px) {
-  header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 24px 24px;
-  }
-
-  header nav {
-    flex-direction: row;
-    width: auto;
-    gap: 20px;
-  }
-
-  main {
-    padding: 32px 24px;
-  }
-
-  aside {
-    margin: 0 24px 36px 24px;
-    padding: 24px;
-  }
-
-  footer {
-    padding: 28px 24px;
-  }
-
-  .cards {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
 }
 
-@media (min-width: 1024px) {
-  header h1 {
-    font-size: 2rem;
-  }
-
-  .layout-container {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-    max-width: 1440px;
-    margin: 40px auto;
-    padding: 0 32px;
-    align-items: start;
-  }
-
-  main {
-    padding: 0;
-  }
-
-  aside {
-    margin: 0;
-    padding: 24px;
-    position: sticky;
-    top: 24px;
-  }
-
-  .cards {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.card {
+  background-color: var(--color-card-bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  will-change: transform, opacity;
+  animation: cardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.loading-state {
-  font-weight: 500;
-  color: var(--color-primary);
-  margin: 16px 0;
+.card-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 160px;
+  background-color: #e5e7eb;
 }
 
-.error-banner {
-  color: var(--badge-concert);
-  background-color: #fee2e2;
+.card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  color: #ffffff;
+  font-size: 0.75rem;
   font-weight: 600;
-  padding: 12px 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 9999px;
+}
+
+.badge.concert { background-color: var(--badge-concert); }
+.badge.cinema { background-color: var(--badge-cinema); }
+.badge.theatre { background-color: var(--badge-theatre); }
+.badge.exhibition { background-color: var(--badge-exhibition); }
+.badge.holliday { background-color: var(--badge-holliday); }
+
+.card-body {
+  padding: 16px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  flex-grow: 1;
+}
+
+.event-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #eef2ff;
+  color: var(--color-primary);
+  padding: 6px 10px;
   border-radius: 8px;
-  border-left: 4px solid var(--badge-concert);
-  margin: 16px 0;
+  min-width: 50px;
+  flex-shrink: 0;
+}
+
+.event-date .day {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.event-date .month {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.event-title {
+  font-size: 1.125rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.days-remaining {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 4px 0 0 0;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 16px 16px 16px;
+  margin-top: auto;
+}
+
+.btn-card-details {
+  display: inline-block;
+  font-size: 0.85rem;
+  padding: 6px 16px;
+  text-decoration: none;
 }
 
 .events-header-actions {
@@ -364,41 +313,6 @@ footer a {
   background-color: rgba(17, 24, 39, 0.9);
 }
 
-.filter-btn-fav {
-  border: 1px solid #fbbf24;
-  color: #b45309;
-  background-color: #fffbeb;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.filter-btn-fav:hover {
-  background-color: #fef3c7;
-}
-
-.filter-btn-fav.active {
-  background-color: #fbbf24;
-  color: #78350f;
-  border-color: #d97706;
-}
-
-.empty-state {
-  color: #6b7280;
-  font-style: italic;
-  padding: 24px 0;
-  text-align: center;
-  grid-column: 1 / -1;
-}
-
-.days-remaining {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin: 4px 0 0 0;
-}
-
 .filter-buttons {
   display: flex;
   flex-wrap: wrap;
@@ -435,10 +349,14 @@ footer a {
 }
 
 .filter-btn-fav {
-  border-color: #fcd34d;
+  border: 1px solid #fcd34d;
   background-color: #fffbeb;
   color: #b45309;
   font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .filter-btn-fav:hover {
@@ -516,20 +434,28 @@ footer a {
   transform: translateY(-1px);
 }
 
-@keyframes cardFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.loading-state {
+  font-weight: 500;
+  color: var(--color-primary);
+  margin: 16px 0;
 }
 
-.card {
-  will-change: transform, opacity;
-  animation: cardFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.error-banner {
+  color: var(--badge-concert);
+  background-color: #fee2e2;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid var(--badge-concert);
+  margin: 16px 0;
+}
+
+.empty-state {
+  color: #6b7280;
+  font-style: italic;
+  padding: 24px 0;
+  text-align: center;
+  grid-column: 1 / -1;
 }
 
 .event-progress-wrap {
@@ -548,6 +474,121 @@ footer a {
   background: linear-gradient(90deg, var(--color-primary), #ec4899);
   border-radius: 9999px;
   transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.event-details-card {
+  background-color: var(--color-card-bg);
+  padding: 28px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.btn-back-link {
+  display: inline-block;
+  margin-bottom: 18px;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.details-actions-wrap {
+  margin-top: 20px;
+}
+
+.not-found-view {
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.card-saved {
+  padding: 20px;
+  background-color: var(--color-card-bg);
+}
+
+.card-saved-title {
+  margin-top: 0;
+}
+
+.card-saved-actions {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-link-action {
+  text-decoration: none;
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (min-width: 600px) {
+  header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 24px;
+  }
+
+  header nav {
+    flex-direction: row;
+    width: auto;
+    gap: 20px;
+  }
+
+  main {
+    padding: 32px 24px;
+  }
+
+  aside {
+    margin: 0 24px 36px 24px;
+    padding: 24px;
+  }
+
+  footer {
+    padding: 28px 24px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  header h1 {
+    font-size: 2rem;
+  }
+
+  .layout-container {
+    gap: 24px;
+    max-width: 1440px;
+    margin: 40px auto;
+    padding: 0 32px;
+    align-items: start;
+  }
+
+  main {
+    padding: 0;
+  }
+
+  aside {
+    margin: 0;
+    padding: 24px;
+    position: sticky;
+    top: 24px;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
