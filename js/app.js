@@ -1,5 +1,6 @@
 const staticCard = document.querySelectorAll('.card');
 const form = document.querySelector('#event-form');
+const EVENTS_API_URL = 'https://date.nager.at/api/v3/PublicHolidays/2026/UA';
 
 if (staticCard) {
     staticCard.forEach(card => card.remove());
@@ -9,7 +10,8 @@ const categoryDictionary = {
     concert: 'Концерт',
     cinema: 'Кіно',
     theatre: 'Театр',
-    exhibition: 'Виставка'
+    exhibition: 'Виставка',
+    holliday: 'Свято'
 };
 
 const events = [
@@ -38,6 +40,74 @@ const events = [
         date: '2026-10-17' 
     },
 ];
+
+const reloadBtn = document.querySelector('#reload-btn');
+
+// Функція для отримування даних через API
+async function loadEvents() {
+    const loadingIndicator = document.querySelector('#loading-indicator');
+    const errorMessage = document.querySelector('#error-message');
+
+    try {
+        if (reloadBtn) reloadBtn.disabled = true;
+        if (errorMessage) {
+        errorMessage.hidden = true;
+        errorMessage.textContent = '';
+        }
+        if (loadingIndicator) {
+        loadingIndicator.hidden = false;
+    }
+
+    const response = await fetch(EVENTS_API_URL);
+
+    if (!response.ok) {
+        if (response.status === 404) {
+            throw new Error('Дані про події не знайдено');
+        }
+        throw new Error(`Помилка сервера: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    const apiEvents = data.map((item, index) => ({
+        id: Date.now() + index,
+        title: item.localName || item.name,
+        category: 'exhibition',
+        img: 'placeholder.jpg',
+        date: item.date
+    }));
+
+    events.length = 0;
+    events.push(...apiEvents);
+    renderEvents(events);
+
+    } catch (error) {
+        console.error('Технічні деталі помилки:', error);
+
+        if (errorMessage) {
+        errorMessage.hidden = false;
+        errorMessage.textContent = error.message.includes('Дані про події не знайдено')
+            ? 'Дані про події не знайдено'
+            : 'Не вдалося завантажити події. Перевірте зʼєднання або спробуйте пізніше.';
+        }
+
+        if (listContainer) listContainer.innerHTML = '';
+        if (eventsCount) eventsCount.textContent = 'Кількість подій: 0';
+    } finally {
+        if (loadingIndicator) {
+        loadingIndicator.hidden = true;
+        }
+        if (reloadBtn) reloadBtn.disabled = false;
+    }
+}
+
+loadEvents();
+
+if (reloadBtn) {
+  reloadBtn.addEventListener('click', () => {
+    loadEvents();
+  });
+}
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -145,8 +215,6 @@ function renderEvents(eventsList) {
         }
     });
 }
-
-renderEvents(events);
 
 // Функція для відображення подій за категорією
 function displayEventsByCategory(eventsList, targetCategory) {
