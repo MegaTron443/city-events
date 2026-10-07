@@ -1,195 +1,204 @@
-const staticCard = document.querySelectorAll('.card');
-const form = document.querySelector('#event-form');
-const EVENTS_API_URL = 'https://date.nager.at/api/v3/PublicHolidays/2026/UA';
+const { createApp } = Vue;
 
+const app = createApp({
+  data() {
+    return {
+      events: [
+        { 
+          id: 1,
+          title: 'Кіносеанс «Film»', 
+          category: 'cinema', 
+          img: 'placeholder.jpg', 
+          date: '2026-10-18' 
+        },
+        { 
+          id: 2,
+          title: 'EXPERIENCE. Ludovico Einaudi та Max Richter', 
+          category: 'concert', 
+          img: 'placeholder.jpg', 
+          date: '2026-10-15' 
+        },
+        { 
+          id: 3,
+          title: 'Виступ Романа Скорпіона', 
+          category: 'concert', 
+          img: 'placeholder.jpg', 
+          date: '2026-10-16' 
+        },
+        { 
+          id: 4,
+          title: 'Концерт гурту OKS', 
+          category: 'concert', 
+          img: 'placeholder.jpg', 
+          date: '2026-10-17' 
+        },
+      ],
+      selectedCategory: 'all',
+      selectedEvent: null,
+      isLoading: false,
+      errorMessage: ''
+    };
+  },
+  computed: {
+    filteredEvents() {
+      if (this.selectedCategory === 'all') {
+        return this.events;
+      }
+      return this.events.filter(item => item.category === this.selectedCategory);
+    }
+  },
+  methods: {
+    handleSelectEvent(event) {
+      this.selectedEvent = event;
+    },
+    setCategory(category) {
+      this.selectedCategory = category;
+    },
+    async loadEvents() {
+      const EVENTS_API_URL = 'https://date.nager.at/api/v3/PublicHolidays/2026/UA';
+      this.isLoading = true;
+      this.errorMessage = '';
+
+      try {
+        const response = await fetch(EVENTS_API_URL);
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Дані про події не знайдено');
+          }
+          throw new Error(`Помилка сервера: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const apiEvents = data.map((item, index) => ({
+          id: Date.now() + index,
+          title: item.localName || item.name,
+          category: 'exhibition',
+          img: 'placeholder.jpg',
+          date: item.date
+        }));
+
+        this.events = apiEvents;
+      } catch (error) {
+        console.error('Технічні деталі помилки:', error);
+        this.errorMessage = error.message.includes('Дані про події не знайдено')
+          ? 'Дані про події не знайдено'
+          : 'Не вдалося завантажити події. Перевірте зʼєднання або спробуйте пізніше.';
+        this.events = [];
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    handleAddEvent(event) {
+      const form = event.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const newEvent = {
+        id: Date.now(),
+        title: form.elements.title.value.trim(),
+        category: form.elements.category.value,
+        img: 'placeholder.jpg',
+        date: form.elements.date.value
+      };
+
+      this.events.push(newEvent);
+      form.reset();
+    }
+  },
+  mounted() {
+    this.loadEvents();
+  }
+});
+
+app.component('EventCard', {
+  props: {
+    title: { type: String, required: true },
+    category: { type: String, required: true },
+    date: { type: String, required: true },
+    img: { type: String, default: 'placeholder.jpg' }
+  },
+  emits: ['select'],
+  computed: {
+    daysUntilEvent() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const targetDate = new Date(this.date);
+      targetDate.setHours(0, 0, 0, 0);
+
+      const diffTime = targetDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 0) return 'Подія вже відбулася';
+      if (diffDays === 0) return 'Сьогодні';
+      if (diffDays === 1) return 'Завтра';
+      return `Через ${diffDays} дн.`;
+    },
+    formattedDate() {
+      const dateObj = new Date(this.date);
+      return {
+        day: dateObj.getDate(),
+        month: dateObj.toLocaleDateString('uk-UA', { month: 'long' })
+      };
+    },
+    categoryLabel() {
+      const categoryDictionary = {
+        concert: 'Концерт',
+        cinema: 'Кіно',
+        theatre: 'Театр',
+        exhibition: 'Виставка',
+        holliday: 'Свято'
+      };
+      return categoryDictionary[this.category] || this.category;
+    }
+  },
+  template: `
+    <article :class="['card', category]" @click="$emit('select')" style="cursor: pointer;">
+      <div class="card-image-wrap">
+        <img :src="'assets/img/' + img" :alt="'Афіша: ' + title">
+        <span :class="['badge', category]">{{ categoryLabel }}</span>
+      </div>
+      <div class="card-body">
+        <time class="event-date" :datetime="date">
+          <span class="day">{{ formattedDate.day }}</span>
+          <span class="month">{{ formattedDate.month }}</span>
+        </time>
+        <div class="event-info">
+          <h3 class="event-title">{{ title }}</h3>
+          <p class="days-remaining" style="font-size: 0.85rem; color: #6b7280; margin-top: 4px;">
+            {{ daysUntilEvent }}
+          </p>
+        </div>
+      </div>
+    </article>
+  `
+});
+
+app.mount('.layout-container');
+
+/* 
+Стару функцію рендеру замінено Vue.
+
+const staticCard = document.querySelectorAll('.card');
 if (staticCard) {
     staticCard.forEach(card => card.remove());
 }
 
-const categoryDictionary = {
-    concert: 'Концерт',
-    cinema: 'Кіно',
-    theatre: 'Театр',
-    exhibition: 'Виставка',
-    holliday: 'Свято'
-};
-
-const events = [
-    { 
-        title: 'Кіносеанс «Film»', 
-        category: 'cinema', 
-        img: 'placeholder.jpg', 
-        date: '2026-10-18' 
-    },
-    { 
-        title: 'EXPERIENCE. Ludovico Einaudi та Max Richter', 
-        category: 'concert', 
-        img: 'placeholder.jpg', 
-        date: '2026-10-15' 
-    },
-    { 
-        title: 'Виступ Романа Скорпіона', 
-        category: 'concert', 
-        img: 'placeholder.jpg', 
-        date: '2026-10-16' 
-    },
-    { 
-        title: 'Концерт гурту OKS', 
-        category: 'concert', 
-        img: 'placeholder.jpg', 
-        date: '2026-10-17' 
-    },
-];
-
-const reloadBtn = document.querySelector('#reload-btn');
-
-// Функція для отримування даних через API
-async function loadEvents() {
-    const loadingIndicator = document.querySelector('#loading-indicator');
-    const errorMessage = document.querySelector('#error-message');
-
-    try {
-        if (reloadBtn) reloadBtn.disabled = true;
-        if (errorMessage) {
-        errorMessage.hidden = true;
-        errorMessage.textContent = '';
-        }
-        if (loadingIndicator) {
-        loadingIndicator.hidden = false;
-    }
-
-    const response = await fetch(EVENTS_API_URL);
-
-    if (!response.ok) {
-        if (response.status === 404) {
-            throw new Error('Дані про події не знайдено');
-        }
-        throw new Error(`Помилка сервера: ${response.status}`);
-    }
-
-    const data = await response.json();
-
-    const apiEvents = data.map((item, index) => ({
-        id: Date.now() + index,
-        title: item.localName || item.name,
-        category: 'exhibition',
-        img: 'placeholder.jpg',
-        date: item.date
-    }));
-
-    events.length = 0;
-    events.push(...apiEvents);
-    renderEvents(events);
-
-    } catch (error) {
-        console.error('Технічні деталі помилки:', error);
-
-        if (errorMessage) {
-        errorMessage.hidden = false;
-        errorMessage.textContent = error.message.includes('Дані про події не знайдено')
-            ? 'Дані про події не знайдено'
-            : 'Не вдалося завантажити події. Перевірте зʼєднання або спробуйте пізніше.';
-        }
-
-        if (listContainer) listContainer.innerHTML = '';
-        if (eventsCount) eventsCount.textContent = 'Кількість подій: 0';
-    } finally {
-        if (loadingIndicator) {
-        loadingIndicator.hidden = true;
-        }
-        if (reloadBtn) reloadBtn.disabled = false;
-    }
-}
-
-loadEvents();
-
-if (reloadBtn) {
-  reloadBtn.addEventListener('click', () => {
-    loadEvents();
-  });
-}
-
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
-
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-
-  const title = event.target.elements.title.value.trim();
-  const category = event.target.elements.category.value;
-  const date = event.target.elements.date.value;
-
-  const newEvent = {
-    id: Date.now(),
-    title: title,
-    category: category,
-    img: 'placeholder.jpg', // Додаємо заглушку для фото, щоб нова картка не ламалася
-    date: date
-  };
-
-  events.push(newEvent);
-  renderEvents(events);
-  form.reset();
-});
-
-const titleInput = document.querySelector('#event-title');
-
-titleInput.addEventListener('input', () => {
-  titleInput.setCustomValidity('');
-
-  const value = titleInput.value.trim();
-
-  if (value.length > 0 && value.length < 3) {
-    titleInput.setCustomValidity('Назва події повинна містити щонайменше 3 символи!');
-  }
-});
-
-titleInput.addEventListener('invalid', () => {
-  if (titleInput.validity.valueMissing) {
-    titleInput.setCustomValidity('Будь ласка, заповніть це поле!');
-  } else if (titleInput.validity.patternMismatch || titleInput.value.trim().length < 3) {
-    titleInput.setCustomValidity('Назва події повинна містити щонайменше 3 символи!');
-  }
-});
-
-const filterContainer = document.querySelector('#category-filter');
-
-filterContainer.addEventListener('click', (event) => {
-  const button = event.target.closest('button');
-  if (!button) return;
-
-  const selectedCategory = button.dataset.category;
-
-  if (selectedCategory === 'all') {
-    renderEvents(events);
-  } else {
-    const filteredEvents = events.filter((item) => item.category === selectedCategory);
-    renderEvents(filteredEvents);
-  }
-});
-
 const listContainer = document.querySelector('#events-list');
 const eventsCount = document.querySelector('#events-count');
 
-function parseEventDate(dateString) {
-    const dateObj = new Date(dateString);
-    const day = dateObj.getDate();
-    const month = dateObj.toLocaleDateString('uk-UA', { month: 'long' });
-    return { day, month };
-}
-// Функція для рендерингу подій на сторінці
 function renderEvents(eventsList) {
     listContainer.innerHTML = '';
 
     eventsList.forEach(event => {
         const card = document.createElement('article');
         
-        // Додаємо класи та атрибут даних для категорії
         card.classList.add('card', event.category);
         card.dataset.category = event.category;
-        // Бейдж категорії події
         const label = categoryDictionary[event.category] || event.category;
 
         const { day, month } = parseEventDate(event.date);
@@ -209,30 +218,9 @@ function renderEvents(eventsList) {
         `;
 
         listContainer.appendChild(card);
-        // Оновлюємо лічильник подій
         if (eventsCount) {
             eventsCount.textContent = `Кількість подій: ${eventsList.length}`;
         }
     });
 }
-
-// Функція для відображення подій за категорією
-function displayEventsByCategory(eventsList, targetCategory) {
-    for (const e of eventsList) {
-        if (e.category === targetCategory) {
-            console.log(`- ${e.title}`);
-        } else {
-            continue;
-        }
-    }
-}
-
-displayEventsByCategory(events, 'concert');
-
-// Приймає текст та максимальну довжину n, додає трикрапку, якщо текст довший за ліміт
-const shorten = (text, n) => text.length > n ? text.slice(0, n) + '...' : text;
-
-const sampleTitle = events[0].title;
-console.log('Оригінальний заголовок:', sampleTitle);
-console.log('Скорочений (до 20 символів):', shorten(sampleTitle, 20));
-console.log('Скорочений (до 60 символів):', shorten(sampleTitle, 60));
+*/
