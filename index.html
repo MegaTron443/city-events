@@ -9,169 +9,29 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="js/app.js" defer></script>
 </head>
 
 <body>
     <header>
         <h1>Афіша подій міста</h1>
-            <nav>
-                <a href="#events">Події</a>
-                <a href="#selected-event">Обрана подія</a>
-            </nav>
+        <nav>
+            <a href="#/" data-link>Головна (Події)</a>
+            <a href="#/saved" data-link>Збережені події</a>
+        </nav>
     </header>
 
     <div class="layout-container">
-        <main> 
-            <section id="events-section">
-
-                <div id="category-filter" class="filter-buttons">
-                    <button 
-                        type="button" 
-                        class="filter-btn" 
-                        :class="{ active: selectedCategory === 'all' }" 
-                        @click="setCategory('all')">
-                        Усі
-                    </button>
-                    <button 
-                        type="button" 
-                        class="filter-btn" 
-                        :class="{ active: selectedCategory === 'concert' }" 
-                        @click="setCategory('concert')">
-                        Концерт
-                    </button>
-                    <button 
-                        type="button" 
-                        class="filter-btn" 
-                        :class="{ active: selectedCategory === 'cinema' }" 
-                        @click="setCategory('cinema')">
-                        Кіно
-                    </button>
-                    <button 
-                        type="button" 
-                        class="filter-btn" 
-                        :class="{ active: selectedCategory === 'theatre' }" 
-                        @click="setCategory('theatre')">
-                        Театр
-                    </button>
-                    <button 
-                        type="button" 
-                        class="filter-btn" 
-                        :class="{ active: selectedCategory === 'exhibition' }" 
-                        @click="setCategory('exhibition')">
-                        Виставка
-                    </button>
-                    <button 
-                        type="button" 
-                        class="filter-btn" 
-                        :class="{ active: selectedCategory === 'holliday' }" 
-                        @click="setCategory('holliday')">
-                        Свято
-                    </button>
-                    <button 
-                        type="button" 
-                        class="filter-btn filter-btn-fav" 
-                        :class="{ active: selectedCategory === 'favorites' }" 
-                        @click="setCategory('favorites')">
-                        ⭐ Обрані ({{ favorites.length }})
-                    </button>
-                </div>
-
-                <h2>Додати подію</h2>
-
-                <form id="event-form" @submit.prevent="handleAddEvent">
-                    <div class="form-group">
-                    <label for="event-title">Назва події:</label>
-                    <input 
-                        type="text" 
-                        id="event-title" 
-                        name="title" 
-                        required 
-                        pattern=".{3,}" 
-                        placeholder="Введіть щонайменше 3 символи"
-                    >
-                    </div>
-
-                    <div class="form-group">
-                    <label for="event-category">Категорія:</label>
-                    <select id="event-category" name="category" required>
-                        <option value="" disabled selected>Оберіть категорію</option>
-                        <option value="concert">Концерт</option>
-                        <option value="cinema">Кіно</option>
-                        <option value="theatre">Театр</option>
-                        <option value="exhibition">Виставка</option>
-                        <option value="holliday">Свято</option>
-                    </select>
-                    </div>
-
-                    <div class="form-group">
-                    <label for="event-date">Дата події:</label>
-                    <input 
-                        type="date" 
-                        id="event-date" 
-                        name="date" 
-                        required
-                    >
-                    </div>
-
-                    <button type="submit" id="submit-btn">Додати подію</button>
-                </form>
-            </section>
-
-            <section id="events">
-                <h2>Події</h2>
-
-                <div class="events-header-actions">
-                    <p id="events-count">Кількість подій: {{ filteredEvents.length }}</p>
-                    <button type="button" id="reload-btn" class="btn-refresh" :disabled="isLoading" @click="loadEvents">Оновити</button>
-                </div>
-
-                <p v-if="isLoading" class="loading-state">Завантаження подій...</p>
-
-                <p v-if="errorMessage" class="error-banner">{{ errorMessage }}</p>
-
-                <div id="events-list" class="cards"> 
-                    <event-card
-                        v-for="event in filteredEvents"
-                        :key="event.id"
-                        :id="event.id"
-                        :title="event.title"
-                        :category="event.category"
-                        :date="event.date"
-                        :img="event.img"
-                        :is-favorite="isFavorite(event.id)"
-                        @toggle-favorite="toggleFavorite(event)"
-                        @select="handleSelectEvent(event)"
-                    ></event-card>
-                </div>
-                <p v-if="errorMessage" class="error-banner">⚠️ {{ errorMessage }}</p>
-                <p v-if="filteredEvents.length === 0" class="empty-state">
-                    Подій у цій категорії не знайдено.
-                </p>
-            </section>
-        </main>
-
-        <aside id="selected-event">
-            <h2>Деталі обраної події</h2>
-            <div v-if="selectedEvent">
-                <h3>{{ selectedEvent.title }}</h3>
-                <p><strong>Дата:</strong> {{ selectedEvent.date }}</p>
-                <p><strong>Категорія:</strong> {{ selectedEvent.category }}</p>
-            </div>
-            <p v-else>Натисніть на картку події, щоб переглянути деталі.</p>
-        </aside>
+        <main id="app"></main>
     </div>
 
     <footer>
         <section>
             <h2>Контакти організаторів</h2>
-
             <address>
                 <p>Email: info@cityevents.ua</p>
                 <p>Телефон: +38(067) 676-67-67</p>
             </address>
-
         </section>
     </footer>
 </body>
