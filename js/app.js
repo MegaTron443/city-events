@@ -154,14 +154,16 @@ const app = createApp({
   },
   computed: {
     filteredEvents() {
+      let result = this.events;
+
       if (this.selectedCategory === 'favorites') {
         const favoriteIds = new Set(this.favorites.map(fav => fav.id));
-        return this.events.filter(item => favoriteIds.has(item.id));
+        result = this.events.filter(item => favoriteIds.has(item.id));
+      } else if (this.selectedCategory !== 'all') {
+        result = this.events.filter(item => item.category === this.selectedCategory);
       }
-      if (this.selectedCategory === 'all') {
-        return this.events;
-      }
-      return this.events.filter(item => item.category === this.selectedCategory);
+
+      return [...result].sort((a, b) => new Date(a.date) - new Date(b.date));
     }
   },
   methods: {
@@ -291,7 +293,43 @@ app.component('EventCard', {
     isFavorite: { type: Boolean, default: false }
   },
   emits: ['select', 'toggle-favorite'],
+  data() {
+    return {
+      animatedWidth: 0
+    };
+  },
+  mounted() {
+    requestAnimationFrame(() => {
+      this.animatedWidth = this.progressPercentage;
+    });
+  },
+  watch: {
+    progressPercentage(newVal) {
+      this.animatedWidth = newVal;
+    }
+  },
   computed: {
+    remainingDaysCount() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const targetDate = new Date(this.date);
+      targetDate.setHours(0, 0, 0, 0);
+
+      const diffTime = targetDate - today;
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    },
+
+    progressPercentage() {
+      const days = this.remainingDaysCount;
+      const MAX_HORIZON_DAYS = 30;
+
+      if (days <= 0) return 100;
+      if (days >= MAX_HORIZON_DAYS) return 5;
+
+      const ratio = 1 - (days / MAX_HORIZON_DAYS);
+      return Math.round(ratio * 100);
+    },
     daysUntilEvent() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -337,6 +375,9 @@ app.component('EventCard', {
         </button>
         <img :src="'assets/img/' + img" :alt="'Афіша: ' + title">
         <span :class="['badge', category]">{{ categoryLabel }}</span>
+      </div>
+      <div class="event-progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+        <div class="event-progress-bar" :style="{ width: progressPercentage + '%' }"></div>
       </div>
       <div class="card-body">
         <time class="event-date" :datetime="date">
