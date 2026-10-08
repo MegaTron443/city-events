@@ -2,8 +2,12 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/server/server.js"
+      "source": "/api/events/:id",
+      "destination": "/api/events.js?id=:id"
+    },
+    {
+      "source": "/api/events",
+      "destination": "/api/events.js"
     }
   ]
 }
