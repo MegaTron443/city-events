@@ -1,0 +1,50 @@
+[
+  {
+    "id": "event-1",
+    "title": "Симфонічний оркестр: Вечір класики",
+    "category": "concert",
+    "img": "placeholder.jpg",
+    "date": "2026-10-15",
+    "location": "Міська філармонія"
+  },
+  {
+    "id": "event-2",
+    "title": "Прем'єра вистави «Гамлет»",
+    "category": "theatre",
+    "img": "placeholder.jpg",
+    "date": "2026-10-18",
+    "location": "Драматичний театр"
+  },
+  {
+    "id": "event-3",
+    "title": "Фестиваль короткометражного кіно",
+    "category": "cinema",
+    "img": "placeholder.jpg",
+    "date": "2026-10-22",
+    "location": "Кінотеатр «Центральний»"
+  },
+  {
+    "id": "event-4",
+    "title": "Виставка сучасного живопису",
+    "category": "exhibition",
+    "img": "placeholder.jpg",
+    "date": "2026-10-25",
+    "location": "Галерея мистецтв"
+  },
+  {
+    "id": "event-5",
+    "title": "Концерт Umamusume:Pretty Derby",
+    "category": "concert",
+    "img": "placeholder.jpg",
+    "date": "2026-10-29",
+    "location": "Центральна площа міста"
+  },
+  {
+    "id": "event-6",
+    "title": "Міське свято осіннього врожаю",
+    "category": "holliday",
+    "img": "placeholder.jpg",
+    "date": "2026-11-01",
+    "location": "Центральна площа міста"
+  }
+]
