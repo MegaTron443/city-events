@@ -5,6 +5,16 @@ const STORAGE_KEY = 'city_events_favorites';
 const MIGRATION_FLAG_KEY = 'events_migrated_to_idb';
 const API_URL = '/api/events';
 
+function escapeHTML(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function saveToLocalStorage(items) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
@@ -129,6 +139,8 @@ function generateEventCardHTML(event, isFav = false) {
   const { progress, label, day, month } = getEventTiming(event.date);
   const catLabel = categoryDictionary[event.category] || event.category;
 
+  const safeTitle = escapeHTML(event.title || event.name);
+
   return `
     <article class="card ${event.category}" data-id="${event.id}">
       <div class="card-image-wrap">
@@ -139,7 +151,7 @@ function generateEventCardHTML(event, isFav = false) {
           data-fav-id="${event.id}">
           ★
         </button>
-        <img src="assets/img/${event.img || 'placeholder.jpg'}" alt="Афіша: ${event.title}">
+        <img src="assets/img/${event.img || 'placeholder.jpg'}" alt="Афіша: ${safeTitle}">
         <span class="badge ${event.category}">${catLabel}</span>
       </div>
       <div class="event-progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100">
@@ -151,7 +163,7 @@ function generateEventCardHTML(event, isFav = false) {
           <span class="month">${month}</span>
         </time>
         <div class="event-info">
-          <h3 class="event-title">${event.title}</h3>
+          <h3 class="event-title">${safeTitle}</h3>
           <p class="days-remaining">${label}</p>
         </div>
       </div>
@@ -350,15 +362,20 @@ async function renderEventDetailsView(params, container) {
   const savedItems = await getAllItems();
   const isSaved = savedItems.some(i => String(i.id) === String(event.id));
 
+  const safeTitle = escapeHTML(event.title || event.name);
+  const safeLocation = escapeHTML(event.location || 'Головний зал');
+  const safeCategory = escapeHTML(event.category || 'Культурна подія');
+  const safeDate = escapeHTML(event.date);
+
   container.innerHTML = `
     <article class="event-details-card">
       <a href="#/" data-link class="btn-back-link">
         ← Назад до афіші
       </a>
-      <h2>${event.title || event.name}</h2>
-      <p><strong>Дата:</strong> ${event.date}</p>
-      <p><strong>Локація:</strong> ${event.location || 'Головний зал'}</p>
-      <p><strong>Категорія:</strong> ${event.category || 'Культурна подія'}</p>
+      <h2>${safeTitle}</h2>
+      <p><strong>Дата:</strong> ${safeDate}</p>
+      <p><strong>Локація:</strong> ${safeLocation}</p>
+      <p><strong>Категорія:</strong> ${safeCategory}</p>
       <div class="details-actions-wrap">
         <button type="button" class="btn-refresh" id="toggle-save-detail-btn">
           ${isSaved ? '★ Видалити з обраного' : '☆ Додати в обране'}
@@ -402,11 +419,11 @@ async function renderSavedEventsView(params, container) {
   if (items.length > 0) {
     list.innerHTML = items.map(item => `
       <article class="card card-saved">
-        <h3 class="card-saved-title">${item.name || item.title}</h3>
-        <p><strong>Дата:</strong> ${item.date}</p>
-        <p><strong>Локація:</strong> ${item.location || 'Головний зал'}</p>
+        <h3 class="card-saved-title">${escapeHTML(item.name || item.title)}</h3>
+        <p><strong>Дата:</strong> ${escapeHTML(item.date)}</p>
+        <p><strong>Локація:</strong> ${escapeHTML(item.location || 'Головний зал')}</p>
         <div class="card-saved-actions">
-          <a href="#/events/${item.id}" data-link class="btn-refresh btn-link-action">Переглянути</a>
+          <a href="#/events/${escapeHTML(item.id)}" data-link class="btn-refresh btn-link-action">Переглянути</a>
         </div>
       </article>
     `).join('');
