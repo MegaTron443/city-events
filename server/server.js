@@ -32,6 +32,10 @@ app.get('/api/events/:id', (req, res) => {
   res.json(event);
 });
 
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../index.html'));
+});
+
 // Обробка неіснуючих API ендпоінтів
 app.use('/api', (req, res) => {
   res.status(404).json({
