@@ -1,4 +1,4 @@
-const events = require('./events.json');
+const events = require('./data.json');
 
 module.exports = (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
