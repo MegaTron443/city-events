@@ -3,7 +3,7 @@ const DB_VERSION = 1;
 const STORE_NAME = 'savedEvents';
 const STORAGE_KEY = 'city_events_favorites';
 const MIGRATION_FLAG_KEY = 'events_migrated_to_idb';
-const API_URL = 'https://date.nager.at/api/v3/PublicHolidays/2026/UA';
+const API_URL = '/api/events';
 
 function saveToLocalStorage(items) {
   try {
@@ -245,15 +245,8 @@ async function renderHomeView(params, container) {
       const response = await fetch(API_URL);
       if (!response.ok) throw new Error('Помилка сервера');
       const data = await response.json();
-      
-      cachedEvents = data.map(item => ({
-        id: `holiday-${item.date}-${(item.localName || item.name).toLowerCase().replace(/[\s\W]+/g, '-')}`,
-        title: item.localName || item.name,
-        category: 'holliday',
-        img: 'placeholder.jpg',
-        date: item.date,
-        location: 'Головна площа міста'
-      }));
+
+      cachedEvents = data;
       renderList();
     } catch (err) {
       cardsContainer.innerHTML = `<p class="error-banner">Не вдалося завантажити події з API.</p>`;
@@ -330,21 +323,13 @@ async function renderEventDetailsView(params, container) {
     try {
       const response = await fetch(API_URL);
       if (response.ok) {
-        const data = await response.json();
-        cachedEvents = data.map(item => ({
-          id: `holiday-${item.date}-${(item.localName || item.name).toLowerCase().replace(/[\s\W]+/g, '-')}`,
-          title: item.localName || item.name,
-          category: 'holliday',
-          img: 'placeholder.jpg',
-          date: item.date,
-          location: 'Головна площа міста'
-        }));
+        cachedEvents = await response.json();
       }
     } catch (err) {
       console.error('Не вдалося завантажити дані для сторінки деталей:', err);
     }
   }
-  
+    
   let event = cachedEvents.find(e => String(e.id) === String(eventId));
 
   if (!event) {
